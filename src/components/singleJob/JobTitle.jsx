@@ -56,7 +56,10 @@ const JobTitle = () => {
       });
       console.log(res.data);
 
-      window.location.href("/joblist");
+      if (res.data.status == "success") {
+        setShowModal(false);
+        alert("Applied Successfully");
+      }
       console.log(res.data);
     } catch (error) {
       console.log(error);
@@ -162,6 +165,7 @@ const JobTitle = () => {
                                 className="shadow appearance-none border rounded w-full py-2 px-1 text-black"
                                 name="firstName"
                                 onChange={(e) => setFirstName(e.target.value)}
+                                required
                               />
                               <label className="block text-black text-sm font-bold mb-1">
                                 Last Name
@@ -169,6 +173,7 @@ const JobTitle = () => {
                               <input
                                 className="shadow appearance-none border rounded w-full py-2 px-1 text-black"
                                 onChange={(e) => setLastName(e.target.value)}
+                                required
                               />
                               <label className="block text-black text-sm font-bold mb-1">
                                 Experience
@@ -176,6 +181,7 @@ const JobTitle = () => {
                               <input
                                 className="shadow appearance-none border rounded w-full py-2 px-1 text-black"
                                 onChange={(e) => setExperience(e.target.value)}
+                                required
                               />
                               <label className="block text-black text-sm font-bold mb-1">
                                 CV
@@ -184,6 +190,7 @@ const JobTitle = () => {
                                 type="file"
                                 className="shadow appearance-none border rounded w-full py-2 px-1 text-black"
                                 onChange={(e) => setCv(e.target.files[0])}
+                                required
                               />
                             </form>
                           </div>

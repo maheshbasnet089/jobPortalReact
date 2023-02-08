@@ -72,12 +72,12 @@ const JobList = () => {
                       </div>
                       <p className="text-[13px] pt-2">{job.description}</p>
                       <div className="flex gap-3 pt-2">
-                        {login && (
+                        {/* {login && (
                           <ApplyModal
                             setShowModal={setShowModal}
                             showModal={showModal}
                           />
-                        )}
+                        )} */}
 
                         <button
                           onClick={() => navigate(`/single/${job._id}`)}
