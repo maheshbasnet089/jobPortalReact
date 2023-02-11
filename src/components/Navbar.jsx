@@ -55,7 +55,7 @@ const Navbar = () => {
                 data-dropdown-toggle="userDropdown"
                 data-dropdown-placement="bottom-start"
                 className="w-10 h-10 rounded-full cursor-pointer hidden md:flex"
-                src="https://images.unsplash.com/photo-1675066097570-e53c67eb9121?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"
+                src={localStorage.getItem("avatar")}
                 alt="User dropdown"
               />
             </>
@@ -127,8 +127,8 @@ const Navbar = () => {
             className="z-10   bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
           >
             <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-              <div>Bonnie Green</div>
-              <div className="font-medium truncate">name@flowbite.com</div>
+              <div>{localStorage.getItem('name')}</div>
+             
             </div>
             <ul
               className="py-2 text-sm text-gray-700 dark:text-gray-200"

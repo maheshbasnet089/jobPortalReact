@@ -7,10 +7,7 @@ const FeturedJobs = () => {
       <h1 className="text-center">Featured Jobs</h1>
       <div className="grid md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 gap-6 pt-10">
         <FetauredCard />
-        <FetauredCard />
-        <FetauredCard />
-        <FetauredCard />
-        <FetauredCard />
+       
       </div>
     </div>
   );

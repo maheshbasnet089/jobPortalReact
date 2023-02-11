@@ -1,5 +1,7 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { baseUrl } from "../config";
 import Footer from "../Footer";
 import Navbar from "../Navbar";
 import EditProfile from "./EditProfile";
@@ -13,9 +15,24 @@ const Profile = () => {
       window.location.href = "/login";
     }
   };
+  const [profile, setProfile] = useState([]);
+
+  const fetchProfile = async () => {
+    const res = await axios.get(`${baseUrl}user/profile`, {
+      headers: {
+        "x-access-token": localStorage.getItem("token"),
+      },
+    });
+    console.log(res.data);
+    setProfile(res.data.profile[0]);
+    localStorage.setItem("avatar", res.data.profile[0].picture);
+    localStorage.setItem("name", res.data.profile[0].name);
+    
+  };
 
   React.useEffect(() => {
     checkUser();
+    fetchProfile();
   }, []);
 
   return (
@@ -26,22 +43,28 @@ const Profile = () => {
           <div className="grid grid-cols-1 md:grid-cols-3">
             <div className="grid md:grid-cols-3 grid-cols-1 text-center order-last md:order-first mt-10 md:mt-0">
               <div>
-                <p className="font-bold text-gray-700 text-xl">1 years+</p>
+                <p className="font-bold text-gray-700 text-xl">
+                  {profile ? profile.experience : ""}
+                </p>
                 <p className="text-gray-400">Experience</p>
               </div>
               <div>
-                <p className="font-bold text-gray-700 text-xl">5+</p>
+                <p className="font-bold text-gray-700 text-xl">
+                  {profile ? profile.projects : ""}
+                </p>
                 <p className="text-gray-400">Projects</p>
               </div>
               <div>
-                <p className="font-bold text-gray-700 text-xl">Intermediate</p>
+                <p className="font-bold text-gray-700 text-xl">
+                  {profile ? profile.level : ""}
+                </p>
                 <p className="text-gray-400">Level</p>
               </div>
             </div>
             <div className="relative">
               <div className="w-48 h-48 bg-indigo-100 mx-auto rounded-full shadow-2xl absolute inset-x-0 top-0 -mt-24 flex items-center justify-center text-indigo-500">
                 <img
-                  src="https://images.unsplash.com/photo-1675139380320-6ba6a0f6f8b9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw1fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"
+                  src={profile ? profile.picture : ""}
                   className="rounded-full w-48 h-48"
                 />
               </div>
@@ -53,14 +76,19 @@ const Profile = () => {
           </div>
           <div className="mt-20 text-center border-b pb-12">
             <h1 className="md:text-4xl text-2xl font-medium text-gray-700">
-              Sujan Chaudhary,{" "}
+              {profile ? profile.name : ""}
+
               <span className="font-light text-gray-500">22</span>
             </h1>
             <p className="font-light text-gray-600 mt-3">
-              Itahari-19, Nepal, Sunsari
+              {profile ? profile.address : ""}
             </p>
-            <p className="mt-8 text-black font-bold">React Developer</p>
-            <p className="mt-2 text-gray-500">Itahari International College</p>
+            <p className="mt-8 text-black font-bold">
+              {profile ? profile.designation : ""}
+            </p>
+            <p className="mt-2 text-gray-500">
+              {profile ? profile.address : ""}
+            </p>
           </div>
           <div className="space-x-8 flex justify-between mt-10 md:mt-0 md:justify-center pt-6">
             <Link to="/resume" className="text-non">
@@ -76,10 +104,7 @@ const Profile = () => {
           </div>
           <div className="mt-12 flex flex-col justify-center">
             <p className="text-gray-600 text-center font-light lg:px-16">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-              Consequatur, aliquid amet impedit ullam, quod eveniet natus
-              suscipit dolorem ea perspiciatis necessitatibus pariatur nemo
-              praesentium consectetur, eius vero fuga rem omnis.
+              {profile ? profile.description : ""}
             </p>
             <button className="text-indigo-500 py-2 px-4  font-medium mt-4">
               Show more
