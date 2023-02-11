@@ -21,13 +21,17 @@ const JobTitle = () => {
   const [cv, setCv] = useState(null);
   const [experience, setExperience] = useState("");
   const [companyId, setCompanyId] = useState(null);
+  const [followersLength, setFollowersLength] = useState(0);
 
   const fetchJob = async () => {
     try {
       const res = await axios.get(baseUrl + `job/${id}`);
       console.log(res.data);
       setJob(res.data.data.job);
+      setFollowersLength(res.data.data.job.userId.followers.length);
       setCompany(res.data.data.job.userId);
+      setCompanyId(res.data.data.job.userId._id.toString());
+      console.log(companyId);
       // setCompanyId(res.data.job.userId._id.toString());
       // console.log(companyId);
       console.log(company);
@@ -38,7 +42,57 @@ const JobTitle = () => {
   };
   useEffect(() => {
     fetchJob();
+    if (!localStorage.getItem("token")) {
+      document.getElementById("message").style.display = "none";
+    }
+    if (localStorage.getItem("isFollowed") == true) {
+      document.getElementById("follow").style.display = "none";
+      document.getElementById("unFollow").style.display = "block";
+    } else {
+      document.getElementById("follow").style.display = "block";
+      document.getElementById("unFollow").style.display = "none";
+    }
   }, []);
+  const follow = async () => {
+    const res = await axios.post(
+      `${baseUrl}company/follow`,
+      {
+        companyId: companyId,
+      },
+      {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      }
+    );
+    console.log(res.data);
+    if (res.data.status == 200) {
+      localStorage.setItem("isFollowed", true);
+      document.getElementById("follow").style.display = "none";
+      document.getElementById("unFollow").style.display = "block";
+      console.log(res.data);
+    }
+  };
+  const unFollow = async () => {
+    const res = await axios.post(
+      `${baseUrl}company/unFollow`,
+      {
+        companyId: companyId,
+      },
+      {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      }
+    );
+    if (res.data.status == 200) {
+      localStorage.setItem("isFollowed", false);
+
+      document.getElementById("follow").style.display = "block";
+      document.getElementById("unFollow").style.display = "none";
+    }
+    console.log(res.data);
+  };
   const applyJob = async (e) => {
     try {
       e.preventDefault();
@@ -88,12 +142,23 @@ const JobTitle = () => {
               <button
                 type="button"
                 className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                id="follow"
+                onClick={follow}
               >
                 Follow
               </button>
               <button
                 type="button"
                 className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                id="unFollow"
+                onClick={unFollow}
+              >
+                UnFollow
+              </button>
+              <button
+                type="button"
+                className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                id="message"
               >
                 Message
               </button>
@@ -243,29 +308,6 @@ const JobTitle = () => {
         <div className="xs:w-full sm:w-full md:w-[350px]">
           <div className="pt-6">
             <div className=" p-10 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
-              <h3>Short Info</h3>
-              <div className="grid gap-3 pt-5">
-                <div className="flex items-center gap-3">
-                  <BsFillFilePostFill className="text-[18px]" />
-                  <p className="text-sm">posted 1 days ago</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <BsFillPersonCheckFill className="text-[18px]" />
-                  <p className="text-sm">Job Poster: Sujan Chaudhary</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <FaIndustry className="text-[18px]" />
-                  <p className="text-sm">Industry: Information Technology</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <AiOutlineBarChart className="text-[18px]" />
-                  <p className="text-sm">Experience: Entry Level</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="pt-6">
-            <div className=" p-10 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
               <h3>Company Info</h3>
               <div className="grid gap-3 pt-5">
                 <p className="text-sm">Compnay Name: {company.name}</p>
@@ -275,6 +317,10 @@ const JobTitle = () => {
                 <p className="text-sm">Phone: +1234 567 8910</p>
                 <p className="text-sm">Email: {company.email}</p>
                 <p className="text-sm">Website:{company.website}</p>
+                <p className="text-sm">
+                  Followers:
+                  {followersLength}
+                </p>
               </div>
             </div>
           </div>
