@@ -3,6 +3,7 @@ import Footer from "../Footer";
 import Navbar from "../Navbar";
 import Filter from "./Filter";
 import JobList from "./JobList";
+import JobListByCategory from "./jobListByCategory";
 
 let jobs = [
   {
@@ -35,7 +36,7 @@ let jobs = [
   },
 ];
 
-const Jobs = () => {
+const JobsByCategory = () => {
   const [filteredCategory, setFilteredCatgory] = useState();
 
   const [filteredSearch, setFilteredSearch] = useState();
@@ -69,22 +70,21 @@ const Jobs = () => {
   useEffect(() => {
     console.log('hello')
     applyFilter();
-    
   }, []);
 
   return (
     <>
       <Navbar />
       <div className="flex flex-wrap gap-8 w-[90%] m-auto">
-        {/* <div>
+        <div>
           <Filter
             jobs={jobs}
             handleChange={handleChange}
             handleSearch={handleSearch}
           />
-        </div> */}
+        </div>
         <div className="flex-1">
-          <JobList jobs={allFilter} />
+          <JobListByCategory jobs={allFilter} />
         </div>
       </div>
       <Footer />
@@ -92,4 +92,4 @@ const Jobs = () => {
   );
 };
 
-export default Jobs;
+export default JobsByCategory;

@@ -22,6 +22,7 @@ import Contact from "./components/Contact";
 import RegisterAsCompany from "./components/auth/RegisterAsCompany";
 import Applicants from "./components/Dashboard/Applicants";
 import Messages from "./components/Dashboard/Messages";
+import JobsByCategory from "./components/joblist/jobsByCategory";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
           <Route path="/single/:id" element={<SinglePage />} />
           <Route path="/resume" element={<ResumeMain />} />
           <Route path="/jobs" element={<Jobs />} />
+          <Route path="/jobs/:id" element={<JobsByCategory/>} />
           <Route path="/chat/:id" element={<Chat />} />
           <Route path="/cv" element={<CV />} />
           <Route path="/contact" element={<Contact />} />

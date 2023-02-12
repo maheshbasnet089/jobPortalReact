@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import TextEditor from "./TextEditor";
 import ReactQuill from "react-quill";
@@ -20,7 +20,7 @@ const AddJobs = () => {
   const [deadline, setDeadline] = useState("");
   const [number, setNumber] = useState("");
   const [image, setImage] = useState(null);
-
+  const [categories, setCategories] = useState([]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
@@ -71,7 +71,15 @@ const AddJobs = () => {
       console.log(e);
     }
   };
-
+  const fetchCategory = async () => {
+    const res = await axios.get(`${baseUrl}company/category`);
+    console.log(res.data);
+    setCategories(res.data.catgory);
+    console.log(categories);
+  };
+  useEffect(() => {
+    fetchCategory();
+  }, []);
   return (
     <div>
       <h1>Add Jobs</h1>
@@ -197,7 +205,7 @@ const AddJobs = () => {
             </label>
           </div>
           <div className="relative z-0 w-full mb-6 group">
-            <input
+            {/* <input
               type="text"
               name="floating_company"
               id="floating_company"
@@ -205,12 +213,28 @@ const AddJobs = () => {
               placeholder=" "
               required
               onChange={(e) => setCompany(e.target.value)}
-            />
+            /> */}
+            <select
+              name="floating_company"
+              id="floating_company"
+              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              placeholder=" "
+              required
+              onChange={(e) => setCompany(e.target.value)}
+            >
+              {categories.map((category) => {
+                return (
+                  <option key={category._id} value={category.name}>
+                    {category.name}
+                  </option>
+                );
+              })}
+            </select>
             <label
               for="floating_company"
               className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
-              Industry
+              Category
             </label>
           </div>
         </div>
