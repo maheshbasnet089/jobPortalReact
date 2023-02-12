@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { GoLocation } from "react-icons/go";
 import { BiTimeFive } from "react-icons/bi";
 import { FaIndustry, FaRegMoneyBillAlt } from "react-icons/fa";
 import { MdOutlineTimerOff } from "react-icons/md";
 import { FcBriefcase, FcBookmark } from "react-icons/fc";
-import { useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { baseUrl } from "../config";
 import { BsFillFilePostFill, BsFillPersonCheckFill } from "react-icons/bs";
@@ -12,8 +12,10 @@ import { AiOutlineBarChart } from "react-icons/ai";
 import ApplyModal from "../joblist/ApplyModal";
 
 const JobTitle = () => {
+  const navigate = useNavigate();
   let { id } = useParams();
   const [job, setJob] = useState([]);
+
   const [company, setCompany] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [firstName, setFirstName] = useState("");
@@ -30,7 +32,7 @@ const JobTitle = () => {
       setJob(res.data.data.job);
       setFollowersLength(res.data.data.job.userId.followers.length);
       setCompany(res.data.data.job.userId);
-      setCompanyId(res.data.data.job.userId._id.toString());
+      setCompanyId(res.data.data.job.userId._id);
       console.log(companyId);
       // setCompanyId(res.data.job.userId._id.toString());
       // console.log(companyId);
@@ -40,6 +42,7 @@ const JobTitle = () => {
       console.log(error);
     }
   };
+
   useEffect(() => {
     fetchJob();
     if (!localStorage.getItem("token")) {
@@ -119,6 +122,9 @@ const JobTitle = () => {
       console.log(error);
     }
   };
+  const message = async () => {
+    navigate(`/chat/${companyId}`);
+  };
 
   let login = localStorage.getItem("token") ? true : false;
 
@@ -159,6 +165,7 @@ const JobTitle = () => {
                 type="button"
                 className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
                 id="message"
+                onClick={message}
               >
                 Message
               </button>

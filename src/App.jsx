@@ -21,6 +21,7 @@ import SinglePage from "./components/singleJob/SinglePage";
 import Contact from "./components/Contact";
 import RegisterAsCompany from "./components/auth/RegisterAsCompany";
 import Applicants from "./components/Dashboard/Applicants";
+import Messages from "./components/Dashboard/Messages";
 
 function App() {
   return (
@@ -36,7 +37,7 @@ function App() {
           <Route path="/single/:id" element={<SinglePage />} />
           <Route path="/resume" element={<ResumeMain />} />
           <Route path="/jobs" element={<Jobs />} />
-          <Route path="/chat" element={<Chat />} />
+          <Route path="/chat/:id" element={<Chat />} />
           <Route path="/cv" element={<CV />} />
           <Route path="/contact" element={<Contact />} />
 
@@ -47,6 +48,7 @@ function App() {
             <Route path="jobslist" element={<JobsTable />} />
             <Route path="myprofile" element={<MyProfile />} />
             <Route path="applicants" element={<Applicants />} />
+            <Route path="messages" element={<Messages />} />
           </Route>
 
           {/* admin dashboard layout */}

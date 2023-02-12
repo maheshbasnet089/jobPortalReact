@@ -29,9 +29,9 @@ const Login = () => {
           if (res.data.user.role) {
             localStorage.setItem("token", res.data.token);
             localStorage.setItem("role", res.data.user.role);
-         
+
             document.cookie = `token = ${res.data.token}`;
-            console.log(res.data.user)
+            console.log(res.data.user);
             if (res.data.user.role === "company") {
               window.location.href = "/dashboard";
             } else {
