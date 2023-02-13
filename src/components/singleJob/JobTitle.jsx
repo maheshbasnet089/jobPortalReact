@@ -582,14 +582,15 @@ const JobTitle = () => {
             })}
         </div>
       </div>
-
-      <div>
-        <textarea
-          style={{ width: "1000px", height: "50px" }}
-          onChange={(e) => setCommentMessage(e.target.value)}
-        ></textarea>
-        <button onClick={(e) => createComment(e)}>Submit</button>
-      </div>
+      {localStorage.getItem("token") && (
+        <div>
+          <textarea
+            style={{ width: "1000px", height: "50px" }}
+            onChange={(e) => setCommentMessage(e.target.value)}
+          ></textarea>
+          <button onClick={(e) => createComment(e)}>Submit</button>
+        </div>
+      )}
 
       {/* <RatingModal /> */}
       <div style={{ display: "flex" }}>

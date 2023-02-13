@@ -12,6 +12,7 @@ const WorkHistory = ({ workHistory }) => {
           <h3 className="pb-5">Work History</h3>
         </div>
         {workHistory.map((work) => {
+          console.log(work);
           return (
             <div className="grid gap-[30px]">
               <div className="border-b pb-8">

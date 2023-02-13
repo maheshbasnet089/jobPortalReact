@@ -45,7 +45,7 @@ const Navbar = () => {
           <li className="pl-4">Textimonial</li>
         </ul>
         <div className="flex gap-5">
-          <Notification setOpen={setOpen} open={open} />
+          {/* <Notification setOpen={setOpen} open={open} /> */}
           {login ? (
             <>
               <img

@@ -21,9 +21,11 @@ const ResumeMain = () => {
         "x-access-token": localStorage.getItem("token"),
       },
     });
-    console.log(res.data.cv[0]);
-    setWorkHistory(res.data.cv[0].workHistory);
-    setCv(res.data.cv[0]);
+    console.log(res.data.cv.slice(-1)[0]);
+    setWorkHistory(res.data.cv.slice(-1)[0].workHistory);
+    console.log(workHistory)
+    setCv(res.data.cv.slice(-1)[0]);
+    console.log(cv);
   };
   useEffect(() => {
     fetchCv();
