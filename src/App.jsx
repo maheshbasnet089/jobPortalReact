@@ -23,6 +23,7 @@ import RegisterAsCompany from "./components/auth/RegisterAsCompany";
 import Applicants from "./components/Dashboard/Applicants";
 import Messages from "./components/Dashboard/Messages";
 import JobsByCategory from "./components/joblist/jobsByCategory";
+import AdminUserTable from "./components/AdminDashboard/userTable";
 
 function App() {
   return (
@@ -59,6 +60,8 @@ function App() {
             <Route path="jobslist" element={<AdminJobsTable />} />
             <Route path="company" element={<Companies />} />
             <Route path="addcategory" element={<AddCategory />} />
+            <Route path="users" element={<AdminUserTable />} />
+
           </Route>
         </Routes>
       </BrowserRouter>

@@ -56,6 +56,15 @@ const AddCategory = () => {
       alert(e.message);
     }
   };
+  const deleteCategory = async (id) => {
+    const res = await axios.delete(`${baseUrl}admin/category/${id}`, {
+      headers: {
+        "x-access-token": localStorage.getItem("token"),
+      },
+    });
+    console.log(res.data);
+    fetchCategory();
+  };
   return (
     <div>
       <h1>Add Category</h1>
@@ -103,7 +112,10 @@ const AddCategory = () => {
                 <tr key={category._id} className="bg-white">
                   <td className="p-2 w-1/2">{index + 1}</td>
                   <td className="p-2 w-1/2">{category.name}</td>
-                  {/* <AiFillDelete className="cursor-pointer" /> */}
+                  <AiFillDelete
+                    onClick={()=>deleteCategory(category._id)}
+                    className="cursor-pointer"
+                  />
                 </tr>
               );
             })}

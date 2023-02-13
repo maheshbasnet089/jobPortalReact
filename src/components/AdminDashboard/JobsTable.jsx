@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { AiFillDelete } from "react-icons/ai";
 import { baseUrl } from "../config";
 
 const AdminJobsTable = () => {
@@ -12,6 +13,16 @@ const AdminJobsTable = () => {
   useEffect(() => {
     fetchJobs();
   }, []);
+  const deleteJob = async (id) => {
+    const res = await axios.delete(`${baseUrl}job/${id}`, {
+      headers: {
+        "x-access-token": localStorage.getItem("token"),
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(res.data);
+    fetchJobs();
+  };
   return (
     <div>
       <h3 className="pb-4">Job List</h3>
@@ -39,7 +50,10 @@ const AdminJobsTable = () => {
           <tbody>
             {jobs.map((job) => {
               return (
-                <tr key={job._id} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+                <tr
+                  key={job._id}
+                  className="bg-white border-b dark:bg-gray-900 dark:border-gray-700"
+                >
                   <th
                     scope="row"
                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
@@ -50,12 +64,10 @@ const AdminJobsTable = () => {
                   <td className="px-6 py-4">{job.industry}</td>
                   <td className="px-6 py-4">{job.salary}</td>
                   <td className="px-6 py-4">
-                    <a
-                      href="#"
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                    >
-                      Edit
-                    </a>
+                    <AiFillDelete
+                      onClick={() => deleteJob(job._id)}
+                      className="cursor-pointer"
+                    />
                   </td>
                 </tr>
               );

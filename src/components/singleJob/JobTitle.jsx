@@ -7,8 +7,13 @@ import { FcBriefcase, FcBookmark } from "react-icons/fc";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { baseUrl } from "../config";
-import { BsFillFilePostFill, BsFillPersonCheckFill } from "react-icons/bs";
-import { AiOutlineBarChart } from "react-icons/ai";
+import {
+  BsFillFilePostFill,
+  BsFillPersonCheckFill,
+  BsStar,
+  BsStarFill,
+} from "react-icons/bs";
+import { AiFillHeart, AiOutlineBarChart } from "react-icons/ai";
 import ApplyModal from "../joblist/ApplyModal";
 
 const JobTitle = () => {
@@ -18,12 +23,76 @@ const JobTitle = () => {
 
   const [company, setCompany] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showRateModal, setShowRateModal] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [cv, setCv] = useState(null);
   const [experience, setExperience] = useState("");
   const [companyId, setCompanyId] = useState(null);
   const [followersLength, setFollowersLength] = useState(0);
+  const [likesLength, setlikesLength] = useState(0);
+  const [rating, setRating] = useState(0);
+  const [reviewComment, setReviewComment] = useState("");
+  const [reviews, setReviews] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [commentMessage, setCommentMessage] = useState("");
+
+  const createComment = async (e) => {
+    e.preventDefault();
+    const res = await axios.post(
+      `${baseUrl}job/comment`,
+      {
+        jobId: id,
+        message: commentMessage,
+      },
+      {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      }
+    );
+    console.log(res.data);
+    if (res.data.status == 200) {
+      fetchComments();
+    }
+  };
+  const fetchComments = async () => {
+    const res = await axios.get(`${baseUrl}job/comment/${id}`);
+    console.log(res.data);
+    if (res.data.status == 200) {
+      setComments(res.data.comments);
+      console.log(comments);
+    }
+  };
+
+  const fetchRatings = async () => {
+    const res = await axios.get(`${baseUrl}job/rate/${id}`);
+    console.log(res.data);
+    if (res.data.status == 200) {
+      setReviews(res.data.reviews);
+    }
+  };
+
+  const rateJob = async () => {
+    const res = await axios.post(
+      `${baseUrl}job/rate`,
+      {
+        jobId: id,
+        rating: rating,
+        message: reviewComment,
+      },
+      {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      }
+    );
+    if (res.data.status == 200) {
+      alert("Rated Successfully");
+      setShowRateModal(false);
+      fetchRatings();
+    }
+  };
 
   const fetchJob = async () => {
     try {
@@ -31,6 +100,7 @@ const JobTitle = () => {
       console.log(res.data);
       setJob(res.data.data.job);
       setFollowersLength(res.data.data.job.userId.followers.length);
+      setlikesLength(res.data.data.job.likes.length);
       setCompany(res.data.data.job.userId);
       setCompanyId(res.data.data.job.userId._id);
       console.log(companyId);
@@ -45,15 +115,26 @@ const JobTitle = () => {
 
   useEffect(() => {
     fetchJob();
+    fetchRatings();
+    fetchComments();
     if (!localStorage.getItem("token")) {
       document.getElementById("message").style.display = "none";
     }
-    if (localStorage.getItem("isFollowed") == true) {
+    console.log(localStorage.getItem("isFollowed"));
+    console.log(localStorage.getItem("isLiked"));
+    if (localStorage.getItem("isFollowed") == "true") {
       document.getElementById("follow").style.display = "none";
       document.getElementById("unFollow").style.display = "block";
     } else {
       document.getElementById("follow").style.display = "block";
       document.getElementById("unFollow").style.display = "none";
+    }
+    if (localStorage.getItem("isLiked") == "true") {
+      document.getElementById("like").style.display = "none";
+      document.getElementById("unLike").style.display = "block";
+    } else {
+      document.getElementById("like").style.display = "block";
+      document.getElementById("unLike").style.display = "none";
     }
   }, []);
   const follow = async () => {
@@ -128,6 +209,46 @@ const JobTitle = () => {
 
   let login = localStorage.getItem("token") ? true : false;
 
+  const like = async () => {
+    const res = await axios.post(
+      `${baseUrl}job/like`,
+      {
+        jobId: id,
+      },
+      {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      }
+    );
+    console.log(res.data);
+    if (res.data.status == 200) {
+      localStorage.setItem("isLiked", true);
+      document.getElementById("like").style.display = "none";
+      document.getElementById("unLike").style.display = "block";
+      console.log(res.data);
+    }
+  };
+  const unLike = async () => {
+    const res = await axios.post(
+      `${baseUrl}job/unLike`,
+      {
+        jobId: id,
+      },
+      {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      }
+    );
+    if (res.data.status == 200) {
+      localStorage.setItem("isLiked", false);
+
+      document.getElementById("like").style.display = "block";
+      document.getElementById("unLike").style.display = "none";
+    }
+    console.log(res.data);
+  };
   return (
     <div className=" pt-6">
       <div className="flex flex-wrap gap-x-[20px] p-10 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] ">
@@ -292,6 +413,103 @@ const JobTitle = () => {
                 <FcBookmark className="text-[22px] " />{" "}
                 <p className="pl-2">Bookmark</p>
               </a>
+              <button
+                onClick={like}
+                id="like"
+                className="relative flex w-auto px-6 py-3 overflow-hidden text-base font-semibold text-center text-white rounded-lg bg-green-400 hover:text-black hover:bg-white"
+              >
+                <p className="pl-2">Like</p>
+              </button>
+              <button
+                onClick={unLike}
+                id="unLike"
+                className="relative flex w-auto px-6 py-3 overflow-hidden text-base font-semibold text-center text-white rounded-lg bg-green-400 hover:text-black hover:bg-white"
+              >
+                <p className="pl-2">unLike</p>
+              </button>
+              <>
+                <button
+                  className="middle none center rounded-lg bg-pink-500 py-2 px-4 font-sans text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                  data-ripple-light="true"
+                  type="button"
+                  onClick={() => setShowRateModal(true)}
+                >
+                  Rate
+                </button>
+                {showRateModal ? (
+                  <>
+                    <div className="flex justify-center bg-gray-300 bg-opacity-80  items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+                      <div
+                        className={
+                          showRateModal
+                            ? "relative shadow dark:bg-gray-700"
+                            : " "
+                        }
+                      >
+                        <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                          <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t ">
+                            <h3 className="text-3xl font=semibold">Rate It</h3>
+                            <button
+                              className="bg-transparent border-0 text-black float-right"
+                              onClick={() => setShowRateModal(false)}
+                            >
+                              <span className="text-black opacity-7 h-6 w-6 text-[15px] block bg-gray-400 py-0 rounded-full">
+                                x
+                              </span>
+                            </button>
+                          </div>
+                          <div className="relative p-6 flex-auto">
+                            <form
+                              className="bg-gray-200 shadow-md rounded px-8 pt-6 pb-8 w-full"
+                              onSubmit={rateJob}
+                            >
+                              <label className="block text-black text-sm font-bold mb-1">
+                                Star
+                              </label>
+                              <input
+                                type="number"
+                                max={5}
+                                min={1}
+                                className="shadow appearance-none border rounded w-full py-2 px-1 text-black"
+                                name="firstName"
+                                onChange={(e) => setRating(e.target.value)}
+                                required
+                              />
+
+                              <label className="block text-black text-sm font-bold mb-1">
+                                Comment
+                              </label>
+                              <input
+                                className="shadow appearance-none border rounded w-full py-2 px-1 text-black"
+                                onChange={(e) =>
+                                  setReviewComment(e.target.value)
+                                }
+                                required
+                              />
+                            </form>
+                          </div>
+                          <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
+                            <button
+                              className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
+                              type="button"
+                              onClick={() => setShowRateModal(false)}
+                            >
+                              Close
+                            </button>
+                            <button
+                              className="text-white bg-yellow-500 active:bg-yellow-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+                              type="submit"
+                              onClick={rateJob}
+                            >
+                              Submit
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                ) : null}
+              </>
             </div>
           )}
         </div>
@@ -328,10 +546,78 @@ const JobTitle = () => {
                   Followers:
                   {followersLength}
                 </p>
+                <p className="text-sm">
+                  Likes:
+                  {likesLength}
+                </p>
               </div>
             </div>
           </div>
         </div>
+      </div>
+      {/* comments */}
+      <div>
+        <h3>Comments</h3>
+        <div style={{ height: "300px", marginTop: "10px" }}>
+          {comments.length !== 0 &&
+            comments.map((comment) => {
+              return (
+                <div key={comment._id} style={{ marginBottom: "10px" }}>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <img
+                      src="https://s7g3.scene7.com/is/image/soloinvest/n00577A?$big_image_web$"
+                      width="20px"
+                      height="20px"
+                      style={{ borderRadius: "50%" }}
+                    />
+                    <em>{comment.userId.name}</em>
+                  </div>
+                  <p>{comment.message}</p>
+
+                  <em style={{ fontWeight: "lighter", fontSize: "14px" }}>
+                    {comment.createdAt}
+                  </em>
+                </div>
+              );
+            })}
+        </div>
+      </div>
+
+      <div>
+        <textarea
+          style={{ width: "1000px", height: "50px" }}
+          onChange={(e) => setCommentMessage(e.target.value)}
+        ></textarea>
+        <button onClick={(e) => createComment(e)}>Submit</button>
+      </div>
+
+      {/* <RatingModal /> */}
+      <div style={{ display: "flex" }}>
+        {reviews.map((review) => {
+          return (
+            <div key={review._id} className="pt-6">
+              <div className=" p-10 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
+                <div style={{ display: "flex" }}>
+                  {(() => {
+                    const stars = [];
+                    for (let i = 0; i < review.rating; i++) {
+                      stars.push(
+                        <BsStarFill key={i} className="text-yellow-500" />
+                      );
+                    }
+                    return stars;
+                  })()}
+                </div>
+                <div className="grid gap-3 pt-5">
+                  <p className="text-sm">
+                    Rated By: {review.userId ? review.userId.name : "Anonymous"}
+                  </p>
+                  <p className="text-sm">Rated At: {review.createdAt}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
