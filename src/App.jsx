@@ -24,6 +24,7 @@ import Applicants from "./components/Dashboard/Applicants";
 import Messages from "./components/Dashboard/Messages";
 import JobsByCategory from "./components/joblist/jobsByCategory";
 import AdminUserTable from "./components/AdminDashboard/userTable";
+import Google from "./components/Google";
 
 function App() {
   return (
@@ -34,12 +35,13 @@ function App() {
           <Route path="/registerAsCompany" element={<RegisterAsCompany />} />
 
           <Route path="/register" element={<Register />} />
+          <Route path="/google/:id" element={<Google />} />
           <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/single/:id" element={<SinglePage />} />
           <Route path="/resume" element={<ResumeMain />} />
           <Route path="/jobs" element={<Jobs />} />
-          <Route path="/jobs/:id" element={<JobsByCategory/>} />
+          <Route path="/jobs/:id" element={<JobsByCategory />} />
           <Route path="/chat/:id" element={<Chat />} />
           <Route path="/cv" element={<CV />} />
           <Route path="/contact" element={<Contact />} />
@@ -61,7 +63,6 @@ function App() {
             <Route path="company" element={<Companies />} />
             <Route path="addcategory" element={<AddCategory />} />
             <Route path="users" element={<AdminUserTable />} />
-
           </Route>
         </Routes>
       </BrowserRouter>

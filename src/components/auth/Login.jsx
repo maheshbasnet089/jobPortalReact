@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { baseUrl } from "../config";
 
 const Login = () => {
@@ -12,6 +13,7 @@ const Login = () => {
     let { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,6 +47,16 @@ const Login = () => {
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  const signInWithGoogle = async () => {
+    window.location.href = "http://localhost:4000/auth/google";
+    const res = await axios.get("http://localhost:4000/auth/google/callback", {
+      withCredentials: true,
+    });
+    console.log(res);
+
+    // navigate(`${baseUrl}/auth/google`);
   };
 
   return (
@@ -114,6 +126,16 @@ const Login = () => {
                         >
                           Sign In
                         </button>
+
+                        <button
+                          onClick={signInWithGoogle}
+                          className="inline-flex justify-center items-center space-x-2 border font-semibold focus:outline-none w-full px-4 py-3 leading-6 rounded border-blue-700 text-white hover:text-whitefocus:ring focus:ring-blue-500 focus:ring-opacity-50  active:border-blue-700 mt-4"
+                        >
+                          {/* <a href="http://localhost:4000/auth/google"> */}
+                          Sign In With Google
+                          {/* </a> */}
+                        </button>
+
                         <div className="space-y-2 sm:flex sm:items-center sm:justify-between sm:space-x-2 sm:space-y-0 mt-4">
                           <label className="flex items-center">
                             <input
