@@ -25,6 +25,7 @@ import Messages from "./components/Dashboard/Messages";
 import JobsByCategory from "./components/joblist/jobsByCategory";
 import AdminUserTable from "./components/AdminDashboard/userTable";
 import Google from "./components/Google";
+import BookMarked from "./components/bookMarked/BookMarked";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           <Route path="/google/:id" element={<Google />} />
           <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/bookmarked" element={<BookMarked />} />
           <Route path="/single/:id" element={<SinglePage />} />
           <Route path="/resume" element={<ResumeMain />} />
           <Route path="/jobs" element={<Jobs />} />
@@ -47,23 +49,26 @@ function App() {
           <Route path="/contact" element={<Contact />} />
 
           {/* company dashboard layout */}
-          <Route path="/" element={<Layout />}>
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="addjobs" element={<AddJobs />} />
-            <Route path="jobslist" element={<JobsTable />} />
-            <Route path="myprofile" element={<MyProfile />} />
-            <Route path="applicants" element={<Applicants />} />
-            <Route path="messages" element={<Messages />} />
-          </Route>
-
+          {localStorage.getItem("role") === "company" && (
+            <Route path="/" element={<Layout />}>
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="addjobs" element={<AddJobs />} />
+              <Route path="jobslist" element={<JobsTable />} />
+              <Route path="myprofile" element={<MyProfile />} />
+              <Route path="applicants" element={<Applicants />} />
+              <Route path="messages" element={<Messages />} />
+            </Route>
+          )}
           {/* admin dashboard layout */}
-          <Route path="/admin/" element={<AdminLayout />}>
-            <Route path="dashboard" element={<AdminDashboard />} />
-            <Route path="jobslist" element={<AdminJobsTable />} />
-            <Route path="company" element={<Companies />} />
-            <Route path="addcategory" element={<AddCategory />} />
-            <Route path="users" element={<AdminUserTable />} />
-          </Route>
+          {localStorage.getItem("role") === "admin" && (
+            <Route path="/admin/" element={<AdminLayout />}>
+              <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="jobslist" element={<AdminJobsTable />} />
+              <Route path="company" element={<Companies />} />
+              <Route path="addcategory" element={<AddCategory />} />
+              <Route path="users" element={<AdminUserTable />} />
+            </Route>
+          )}
         </Routes>
       </BrowserRouter>
     </div>

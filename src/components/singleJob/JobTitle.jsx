@@ -20,6 +20,7 @@ const JobTitle = () => {
   const navigate = useNavigate();
   let { id } = useParams();
   const [job, setJob] = useState([]);
+  const [industry, setIndustry] = useState("");
 
   const [company, setCompany] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -36,6 +37,7 @@ const JobTitle = () => {
   const [reviews, setReviews] = useState([]);
   const [comments, setComments] = useState([]);
   const [commentMessage, setCommentMessage] = useState("");
+  const [similarJobs, setSimilarJobs] = useState([]);
 
   const createComment = async (e) => {
     e.preventDefault();
@@ -99,11 +101,17 @@ const JobTitle = () => {
       const res = await axios.get(baseUrl + `job/${id}`);
       console.log(res.data);
       setJob(res.data.data.job);
+
       setFollowersLength(res.data.data.job.userId.followers.length);
+
       setlikesLength(res.data.data.job.likes.length);
       setCompany(res.data.data.job.userId);
       setCompanyId(res.data.data.job.userId._id);
       console.log(companyId);
+      // setIndustry(res.data.data.job.industry);
+      localStorage.setItem("industry", res.data.data.job.industry);
+      console.log(industry);
+
       // setCompanyId(res.data.job.userId._id.toString());
       // console.log(companyId);
       console.log(company);
@@ -112,11 +120,25 @@ const JobTitle = () => {
       console.log(error);
     }
   };
+  const fetchSimilarJobs = async () => {
+    const res = await axios.get(
+      `${baseUrl}job/getSimilarJobs/${localStorage.getItem("industry")}`
+    );
+    console.log(res.data);
+    if (res.data.status === 200) {
+      const newJobs = res.data.jobs.filter((job) => {
+        return job._id !== id;
+      });
+      setSimilarJobs(newJobs);
+    }
+  };
 
   useEffect(() => {
     fetchJob();
     fetchRatings();
     fetchComments();
+    fetchSimilarJobs();
+
     if (!localStorage.getItem("token")) {
       document.getElementById("message").style.display = "none";
     }
@@ -249,6 +271,17 @@ const JobTitle = () => {
     }
     console.log(res.data);
   };
+
+  const bookMark = async () => {
+    const res = await axios.get(`${baseUrl}user/bookMarkJob/${id}`, {
+      headers: {
+        "x-access-token": localStorage.getItem("token"),
+      },
+    });
+    if (res.data.status == 200) {
+      document.getElementById("bookmark").style.display = "none";
+    }
+  };
   return (
     <div className=" pt-6">
       <div className="flex flex-wrap gap-x-[20px] p-10 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] ">
@@ -261,6 +294,7 @@ const JobTitle = () => {
           <div className="flex flex-wrap justify-between">
             <div className="flex flex-wrap">
               <h4 className="text-[26px]"> {job.title}</h4>{" "}
+              <h4 className="text-[26px]"> {industry}</h4>{" "}
               <span className="text-[26px] text-gray-400">
                 @{job.companyName}
               </span>
@@ -409,7 +443,11 @@ const JobTitle = () => {
                   </>
                 ) : null}
               </>
-              <a className="relative flex w-auto px-6 py-3 overflow-hidden text-base font-semibold text-center text-white rounded-lg bg-green-400 hover:text-black hover:bg-white">
+              <a
+                onClick={bookMark}
+                id="bookmark"
+                className="relative flex w-auto px-6 py-3 overflow-hidden text-base font-semibold text-center text-white rounded-lg bg-green-400 hover:text-black hover:bg-white"
+              >
                 <FcBookmark className="text-[22px] " />{" "}
                 <p className="pl-2">Bookmark</p>
               </a>
@@ -615,6 +653,52 @@ const JobTitle = () => {
                   </p>
                   <p className="text-sm">Rated At: {review.createdAt}</p>
                 </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div style={{ display: "flex" }}>
+        {similarJobs.map((job) => {
+          {
+            console.log(job);
+          }
+          return (
+            <div
+              key={job._id}
+              class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+            >
+              <div class="p-5">
+                <a href="#">
+                  <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                    {job.title}
+                  </h5>
+                </a>
+                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                  {job.description}
+                </p>
+                <a
+                  onClick={() => {
+                    navigate  (`/single/${job._id}`);
+                    window.location.reload();
+                  }}
+                  class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  Read more
+                  <svg
+                    aria-hidden="true"
+                    class="w-4 h-4 ml-2 -mr-1"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </a>
               </div>
             </div>
           );

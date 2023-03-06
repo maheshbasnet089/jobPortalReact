@@ -89,9 +89,13 @@ const Profile = () => {
             <p className="mt-8 text-black font-bold">
               {profile ? profile.designation : ""}
             </p>
-            
           </div>
           <div className="space-x-8 flex justify-between mt-10 md:mt-0 md:justify-center pt-6">
+            <Link to="/bookmarked" className="text-non">
+              <button className="text-white py-2 px-4 uppercase rounded bg-blue-400 hover:bg-blue-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">
+                Bookmarked
+              </button>
+            </Link>
             <Link to="/resume" className="text-non">
               <button className="text-white py-2 px-4 uppercase rounded bg-blue-400 hover:bg-blue-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">
                 My CV
