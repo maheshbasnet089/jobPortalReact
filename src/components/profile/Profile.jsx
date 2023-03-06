@@ -27,7 +27,6 @@ const Profile = () => {
     setProfile(res.data.profile[0]);
     localStorage.setItem("avatar", res.data.profile[0].picture);
     localStorage.setItem("name", res.data.profile[0].name);
-    
   };
 
   React.useEffect(() => {
@@ -64,7 +63,11 @@ const Profile = () => {
             <div className="relative">
               <div className="w-48 h-48 bg-indigo-100 mx-auto rounded-full shadow-2xl absolute inset-x-0 top-0 -mt-24 flex items-center justify-center text-indigo-500">
                 <img
-                  src={profile ? profile.picture : ""}
+                  src={
+                    profile
+                      ? profile.picture
+                      : "https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg"
+                  }
                   className="rounded-full w-48 h-48"
                 />
               </div>
@@ -78,7 +81,7 @@ const Profile = () => {
             <h1 className="md:text-4xl text-2xl font-medium text-gray-700">
               {profile ? profile.name : ""}
 
-              <span className="font-light text-gray-500">22</span>
+              {/* <span className="font-light text-gray-500">22</span> */}
             </h1>
             <p className="font-light text-gray-600 mt-3">
               {profile ? profile.address : ""}
@@ -86,9 +89,7 @@ const Profile = () => {
             <p className="mt-8 text-black font-bold">
               {profile ? profile.designation : ""}
             </p>
-            <p className="mt-2 text-gray-500">
-              {profile ? profile.address : ""}
-            </p>
+            
           </div>
           <div className="space-x-8 flex justify-between mt-10 md:mt-0 md:justify-center pt-6">
             <Link to="/resume" className="text-non">
@@ -106,9 +107,9 @@ const Profile = () => {
             <p className="text-gray-600 text-center font-light lg:px-16">
               {profile ? profile.description : ""}
             </p>
-            <button className="text-indigo-500 py-2 px-4  font-medium mt-4">
+            {/* <button className="text-indigo-500 py-2 px-4  font-medium mt-4">
               Show more
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

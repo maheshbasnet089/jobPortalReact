@@ -102,6 +102,7 @@ const Login = () => {
                           type="email"
                           id="email"
                           name="email"
+                          required
                           placeholder="Enter your email"
                           onChange={(e) => onchange(e)}
                         />
@@ -116,6 +117,7 @@ const Login = () => {
                           id="password"
                           name="password"
                           placeholder="Enter your password"
+                          required
                           onChange={(e) => onchange(e)}
                         />
                       </div>

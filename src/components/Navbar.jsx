@@ -56,8 +56,9 @@ const Navbar = () => {
                 data-dropdown-placement="bottom-start"
                 className="w-10 h-10 rounded-full cursor-pointer hidden md:flex"
                 src={
-                  localStorage.getItem("avatar") &&
                   localStorage.getItem("avatar")
+                    ? localStorage.getItem("avatar")
+                    : "https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg"
                 }
                 alt="User dropdown"
               />
@@ -146,7 +147,6 @@ const Navbar = () => {
                   </a>
                 </li>
               </Link>
-           
             </ul>
             <div className="py-1">
               <button onClick={() => localStorage.clear()}>

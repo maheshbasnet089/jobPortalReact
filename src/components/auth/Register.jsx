@@ -113,6 +113,7 @@ const Register = () => {
                           name="name"
                           placeholder="Enter your name"
                           onChange={(e) => onchange(e)}
+                          required
                         />
                         <p className="text-red-500">{error.name}</p>
                       </div>
@@ -127,6 +128,7 @@ const Register = () => {
                           name="email"
                           placeholder="Enter your email"
                           onChange={(e) => onchange(e)}
+                          required
                         />
                         <p className="text-red-500">{error.email}</p>
                       </div>
@@ -135,6 +137,7 @@ const Register = () => {
                           Password
                         </label>
                         <input
+                        required
                           className="block border border-gray-200 rounded px-5 py-3 leading-6 w-full focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
                           type="password"
                           id="password"
@@ -155,6 +158,7 @@ const Register = () => {
                           name="confPassword"
                           placeholder="Enter confirm password"
                           onChange={(e) => onchange(e)}
+                          required
                         />
                         <p className="text-red-500">{error.confPassword}</p>
                       </div>

@@ -21,7 +21,7 @@ const EditProfile = ({ showModal, setShowModal }) => {
     formData.append("experience", experience);
     formData.append("picture", image);
     formData.append("address", address);
-    formData.append("project", project);
+    formData.append("projects", project);
     formData.append("level", level);
     formData.append("description", description);
 
@@ -34,7 +34,7 @@ const EditProfile = ({ showModal, setShowModal }) => {
       });
       if (res.data.status == 200) {
         setShowModal(false);
-        
+        window.location.reload();
       }
       console.log(res.data);
     } catch (e) {
@@ -45,7 +45,8 @@ const EditProfile = ({ showModal, setShowModal }) => {
   return (
     <>
       <button
-        className="text-white py-2 px-4 uppercase rounded bg-blue-400 hover:bg-blue-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5"
+        // style={{background:"blue"}}
+        // className="text-white  uppercase rounded bg-blue-400 hover:bg-blue-500 shadow hover:shadow-lg font-sm transition transform hover:-translate-y-0.5"
         data-ripple-light="true"
         type="button"
         onClick={() => setShowModal(true)}
